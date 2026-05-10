@@ -1,6 +1,4 @@
 import Icon, { Icons } from "./Icon";
-import { fmt } from "../util";
-
 
 const fmt = (s) => {
   if (!s || isNaN(s)) return "0:00";
