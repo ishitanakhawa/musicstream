@@ -34,31 +34,24 @@ export default function App() {
   ]);
   const [addModal, setAddModal] = useState(null);
 
-  // ── Real audio element ────────────────────────────────────────────────────
   const audioRef = useRef(new Audio());
 
-  // Sync volume whenever it changes (0–100 → 0.0–1.0)
+  // Sync volume whenever it changes
   useEffect(() => {
     audioRef.current.volume = volume / 100;
   }, [volume]);
 
-  // Load + play when currentTrack changes
+  // Load + wire events when track changes
   useEffect(() => {
     const audio = audioRef.current;
     if (!currentTrack) return;
 
     audio.src = currentTrack.audio;
     audio.load();
+    audio.volume = volume / 100;
 
-    if (isPlaying) {
-      audio.play().catch(() => {});
-    }
-
-    // Update progress bar from real audio time
     const onTimeUpdate = () => {
-      if (audio.duration) {
-        setProgress(audio.currentTime / audio.duration);
-      }
+      if (audio.duration) setProgress(audio.currentTime / audio.duration);
     };
     const onLoadedMetadata = () => setDuration(audio.duration);
     const onEnded = () => handleNext();
@@ -67,6 +60,8 @@ export default function App() {
     audio.addEventListener("loadedmetadata", onLoadedMetadata);
     audio.addEventListener("ended", onEnded);
 
+    if (isPlaying) audio.play().catch(() => {});
+
     return () => {
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
@@ -74,18 +69,14 @@ export default function App() {
     };
   }, [currentTrack]);
 
-  // Play / pause in sync with isPlaying state
+  // Play / pause
   useEffect(() => {
     const audio = audioRef.current;
     if (!currentTrack) return;
-    if (isPlaying) {
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
+    if (isPlaying) audio.play().catch(() => {});
+    else audio.pause();
   }, [isPlaying]);
 
-  // ── Playback controls ─────────────────────────────────────────────────────
   const handlePlay = (track) => {
     if (currentTrack?.id === track.id) {
       setIsPlaying((p) => !p);
@@ -113,7 +104,6 @@ export default function App() {
 
   const handlePrev = () => {
     const audio = audioRef.current;
-    // If more than 3 s in, restart current track
     if (audio.currentTime > 3) {
       audio.currentTime = 0;
       setProgress(0);
@@ -126,16 +116,12 @@ export default function App() {
     setIsPlaying(true);
   };
 
-  // Seek: called from Player progress bar click (ratio 0–1)
   const handleSeek = (ratio) => {
     const audio = audioRef.current;
-    if (audio.duration) {
-      audio.currentTime = ratio * audio.duration;
-    }
+    if (audio.duration) audio.currentTime = ratio * audio.duration;
     setProgress(ratio);
   };
 
-  // ── Misc helpers ──────────────────────────────────────────────────────────
   const toggleLike = (id) =>
     setLiked((l) => (l.includes(id) ? l.filter((x) => x !== id) : [...l, id]));
   const addToQueue = (t) => setQueue((q) => [...q, t]);

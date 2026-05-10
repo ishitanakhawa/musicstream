@@ -255,7 +255,7 @@ body::before {
 .track-list { display: flex; flex-direction: column; gap: 1px; }
 .track-row {
   display: grid;
-  grid-template-columns: 44px 1fr 90px 50px auto;
+  grid-template-columns: 44px 1fr 90px auto;
   align-items: center;
   gap: 12px;
   padding: 7px 10px;

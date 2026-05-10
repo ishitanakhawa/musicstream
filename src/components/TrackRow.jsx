@@ -29,7 +29,6 @@ export default function TrackRow({
         <span className="track-row__artist">{track.artist}</span>
       </div>
       <span className="track-row__genre">{track.genre}</span>
-      <span className="track-row__dur">{fmt(track.duration)}</span>
       <div className="track-row__actions">
         <button
           className={`icon-btn ${liked ? "icon-btn--liked" : ""}`}
