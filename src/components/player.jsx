@@ -1,4 +1,5 @@
 import Icon, { Icons } from "./Icon";
+import Visualizer from "./Visualizer";
 
 const fmt = (s) => {
   if (!s || isNaN(s)) return "0:00";
@@ -7,6 +8,7 @@ const fmt = (s) => {
 };
 
 export default function Player({
+  audioElement, 
   track,
   isPlaying,
   toggle,
@@ -119,6 +121,7 @@ export default function Player({
 
       {/* Right – volume */}
       <div className="player__right">
+        <Visualizer audioElement={audioElement} isPlaying={isPlaying} />
         <button
           className="icon-btn"
           onClick={() => setVolume(volume === 0 ? 75 : 0)}

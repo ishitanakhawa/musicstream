@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
+import { extractDominantColor } from "./utils/extractColor";
 
 // Data
 import { ARTISTS, TRACKS } from "./data";
@@ -50,6 +51,13 @@ export default function App() {
     audio.src = currentTrack.audio;
     audio.load();
     audio.volume = volume / 100;
+
+    useEffect(() => {
+      if (!currentTrack?.cover) return;
+      extractDominantColor(currentTrack.cover).then((color) => {
+        document.documentElement.style.setProperty("--album-color", color);
+      });
+    }, [currentTrack]);
 
     const onTimeUpdate = () => {
       if (audio.duration) setProgress(audio.currentTime / audio.duration);
@@ -128,6 +136,9 @@ export default function App() {
   const addToQueue = (t) => setQueue((q) => [...q, t]);
   const removeFromQueue = (i) =>
     setQueue((q) => q.filter((_, idx) => idx !== i));
+
+  const removeTrackFromQueue = (id) =>
+    setQueue((q) => q.filter((t) => t.id !== id));
   const toggleRepeat = () =>
     setRepeat((r) => (r === "none" ? "all" : r === "all" ? "one" : "none"));
 
@@ -154,6 +165,7 @@ export default function App() {
           isPlaying={isPlaying}
           onPlay={handlePlay}
           onRemove={removeFromQueue}
+          onRemoveById={removeTrackFromQueue} // ← add this line
         />
       );
     if (view === "artists")
@@ -192,6 +204,7 @@ export default function App() {
         toggleShuffle={() => setShuffle((s) => !s)}
         repeat={repeat}
         toggleRepeat={toggleRepeat}
+        audioElement={audioRef.current}
       />
       {addModal && (
         <AddToPlaylistModal

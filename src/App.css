@@ -347,6 +347,8 @@ body::before {
   height: var(--player-h);
   /* frosted glass glow */
   box-shadow: 0 -4px 32px rgba(0,0,0,0.35);
+  border-top: 2px solid var(--album-color, #6366f1);
+  transition: border-color 0.8s ease;
 }
 .player--empty {
   display: flex;

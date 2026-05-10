@@ -56,6 +56,18 @@ export default function TrackRow({
           <Icon d={Icons.plus} size={15} />
         </button>
       </div>
+      {onRemove && (
+        <button
+          className="icon-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(track.id);
+          }}
+          title="Remove from playlist"
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 }
