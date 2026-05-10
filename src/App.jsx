@@ -33,25 +33,59 @@ export default function App() {
     { id: 2, name: "Late Night", color: "#e879f9", tracks: [1, 6, 8] },
   ]);
   const [addModal, setAddModal] = useState(null);
-  const timerRef = useRef(null);
 
+  // ── Real audio element ────────────────────────────────────────────────────
+  const audioRef = useRef(new Audio());
+
+  // Sync volume whenever it changes (0–100 → 0.0–1.0)
   useEffect(() => {
-    if (isPlaying) {
-      timerRef.current = setInterval(() => {
-        setProgress((p) => {
-          if (p >= 1) {
-            handleNext();
-            return 0;
-          }
-          return p + 1 / (currentTrack?.duration || 200);
-        });
-      }, 1000);
-    } else {
-      clearInterval(timerRef.current);
-    }
-    return () => clearInterval(timerRef.current);
-  }, [isPlaying, currentTrack]);
+    audioRef.current.volume = volume / 100;
+  }, [volume]);
 
+  // Load + play when currentTrack changes
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!currentTrack) return;
+
+    audio.src = currentTrack.audio;
+    audio.load();
+
+    if (isPlaying) {
+      audio.play().catch(() => {});
+    }
+
+    // Update progress bar from real audio time
+    const onTimeUpdate = () => {
+      if (audio.duration) {
+        setProgress(audio.currentTime / audio.duration);
+      }
+    };
+    const onLoadedMetadata = () => setDuration(audio.duration);
+    const onEnded = () => handleNext();
+
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("ended", onEnded);
+
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, [currentTrack]);
+
+  // Play / pause in sync with isPlaying state
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!currentTrack) return;
+    if (isPlaying) {
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying]);
+
+  // ── Playback controls ─────────────────────────────────────────────────────
   const handlePlay = (track) => {
     if (currentTrack?.id === track.id) {
       setIsPlaying((p) => !p);
@@ -65,7 +99,8 @@ export default function App() {
   const handleNext = useCallback(() => {
     if (!currentTrack) return;
     if (repeat === "one") {
-      setProgress(0);
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
       return;
     }
     const pool = shuffle ? [...TRACKS].sort(() => Math.random() - 0.5) : TRACKS;
@@ -77,18 +112,30 @@ export default function App() {
   }, [currentTrack, shuffle, repeat]);
 
   const handlePrev = () => {
-    if (!currentTrack) return;
-    if (progress > 0.05) {
+    const audio = audioRef.current;
+    // If more than 3 s in, restart current track
+    if (audio.currentTime > 3) {
+      audio.currentTime = 0;
       setProgress(0);
       return;
     }
-    const idx = TRACKS.findIndex((t) => t.id === currentTrack.id);
+    const idx = TRACKS.findIndex((t) => t.id === currentTrack?.id);
     const prev = TRACKS[(idx - 1 + TRACKS.length) % TRACKS.length];
     setCurrentTrack(prev);
     setProgress(0);
     setIsPlaying(true);
   };
 
+  // Seek: called from Player progress bar click (ratio 0–1)
+  const handleSeek = (ratio) => {
+    const audio = audioRef.current;
+    if (audio.duration) {
+      audio.currentTime = ratio * audio.duration;
+    }
+    setProgress(ratio);
+  };
+
+  // ── Misc helpers ──────────────────────────────────────────────────────────
   const toggleLike = (id) =>
     setLiked((l) => (l.includes(id) ? l.filter((x) => x !== id) : [...l, id]));
   const addToQueue = (t) => setQueue((q) => [...q, t]);
@@ -150,7 +197,8 @@ export default function App() {
         next={handleNext}
         prev={handlePrev}
         progress={progress}
-        setProgress={setProgress}
+        setProgress={handleSeek}
+        duration={duration}
         volume={volume}
         setVolume={setVolume}
         shuffle={shuffle}
@@ -169,3 +217,4 @@ export default function App() {
     </div>
   );
 }
+ 

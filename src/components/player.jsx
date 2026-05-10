@@ -1,6 +1,13 @@
 import Icon, { Icons } from "./Icon";
 import { fmt } from "../util";
 
+
+const fmt = (s) => {
+  if (!s || isNaN(s)) return "0:00";
+  const secs = Math.floor(s);
+  return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
+};
+
 export default function Player({
   track,
   isPlaying,
@@ -8,7 +15,8 @@ export default function Player({
   next,
   prev,
   progress,
-  setProgress,
+  setProgress, // progress: 0–1, setProgress(ratio) seeks
+  duration, // real audio duration in seconds
   volume,
   setVolume,
   shuffle,
@@ -25,10 +33,12 @@ export default function Player({
     setProgress(ratio);
   };
 
+  const currentSec = (progress || 0) * (duration || 0);
+
   if (!track) {
     return (
       <footer className="player player--empty">
-        <span>Nothing playing</span>
+        <span>Pick a song to start playing ♪</span>
       </footer>
     );
   }
@@ -55,27 +65,35 @@ export default function Player({
             <Icon d={Icons.shuffle} size={15} />
           </button>
 
-          <button className="icon-btn icon-btn--lg" onClick={prev}>
+          <button
+            className="icon-btn icon-btn--lg"
+            onClick={prev}
+            title="Previous"
+          >
             <Icon d={Icons.prev} fill="currentColor" stroke="none" size={20} />
           </button>
 
-          <button className="play-btn" onClick={toggle}>
+          <button
+            className="play-btn"
+            onClick={toggle}
+            title={isPlaying ? "Pause" : "Play"}
+          >
             <Icon
               d={isPlaying ? Icons.pause : Icons.play}
-              fill="white"
+              fill="currentColor"
               stroke="none"
               size={20}
             />
           </button>
 
-          <button className="icon-btn icon-btn--lg" onClick={next}>
+          <button className="icon-btn icon-btn--lg" onClick={next} title="Next">
             <Icon d={Icons.skip} fill="currentColor" stroke="none" size={20} />
           </button>
 
           <button
             className={`icon-btn ${repeat !== "none" ? "icon-btn--accent" : ""}`}
             onClick={toggleRepeat}
-            title="Repeat"
+            title={`Repeat: ${repeat}`}
           >
             <Icon d={Icons.repeat} size={15} />
             {repeat === "one" && <span className="repeat-badge">1</span>}
@@ -83,27 +101,33 @@ export default function Player({
         </div>
 
         {/* Progress bar */}
-        <div className="progress-bar" onClick={handleSeek}>
-          <div className="progress-bar__track">
+        <div className="progress-bar">
+          <div className="progress-bar__track" onClick={handleSeek}>
             <div
               className="progress-bar__fill"
-              style={{ width: `${progress * 100}%` }}
+              style={{ width: `${(progress || 0) * 100}%` }}
             />
             <div
               className="progress-bar__thumb"
-              style={{ left: `${progress * 100}%` }}
+              style={{ left: `${(progress || 0) * 100}%` }}
             />
           </div>
           <div className="progress-bar__times">
-            <span>{fmt(Math.floor(progress * track.duration))}</span>
-            <span>{fmt(track.duration)}</span>
+            <span>{fmt(currentSec)}</span>
+            <span>{fmt(duration)}</span>
           </div>
         </div>
       </div>
 
       {/* Right – volume */}
       <div className="player__right">
-        <Icon d={volume === 0 ? Icons.volumeMute : Icons.volume} size={15} />
+        <button
+          className="icon-btn"
+          onClick={() => setVolume(volume === 0 ? 75 : 0)}
+          title={volume === 0 ? "Unmute" : "Mute"}
+        >
+          <Icon d={volume === 0 ? Icons.volumeMute : Icons.volume} size={15} />
+        </button>
         <input
           type="range"
           min={0}
@@ -111,6 +135,7 @@ export default function Player({
           value={volume}
           onChange={(e) => setVolume(Number(e.target.value))}
           className="volume-slider"
+          title={`Volume: ${volume}%`}
         />
         <span className="volume-label">{volume}</span>
       </div>

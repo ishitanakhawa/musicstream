@@ -1,3 +1,4 @@
+// Free-to-use audio samples from various public domain / CC0 sources (Pixabay, Free Music Archive)
 export const ARTISTS = [
   {
     id: 1,
@@ -73,6 +74,7 @@ export const ARTISTS = [
   },
 ];
 
+// Audio URLs: freely licensed MP3s from Pixabay (no login required, royalty-free)
 export const TRACKS = [
   {
     id: 1,
@@ -81,7 +83,7 @@ export const TRACKS = [
     genre: "Synthwave",
     albumId: 1,
     cover: "https://picsum.photos/seed/t1/200",
-    duration: 214,
+    audio: "https://cdn.pixabay.com/audio/2022/10/16/audio_12a16d7591.mp3",
   },
   {
     id: 2,
@@ -90,7 +92,7 @@ export const TRACKS = [
     genre: "Synthwave",
     albumId: 1,
     cover: "https://picsum.photos/seed/t2/200",
-    duration: 187,
+    audio: "https://cdn.pixabay.com/audio/2023/06/07/audio_8db5bd2e57.mp3",
   },
   {
     id: 3,
@@ -99,7 +101,7 @@ export const TRACKS = [
     genre: "Synthwave",
     albumId: 2,
     cover: "https://picsum.photos/seed/t3/200",
-    duration: 231,
+    audio: "https://cdn.pixabay.com/audio/2022/11/22/audio_febc508520.mp3",
   },
   {
     id: 4,
@@ -108,7 +110,7 @@ export const TRACKS = [
     genre: "Lo-fi",
     albumId: 3,
     cover: "https://picsum.photos/seed/t4/200",
-    duration: 168,
+    audio: "https://cdn.pixabay.com/audio/2022/08/02/audio_884fe92c21.mp3",
   },
   {
     id: 5,
@@ -117,7 +119,7 @@ export const TRACKS = [
     genre: "Lo-fi",
     albumId: 3,
     cover: "https://picsum.photos/seed/t5/200",
-    duration: 195,
+    audio: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0c6ff1bab.mp3",
   },
   {
     id: 6,
@@ -126,7 +128,7 @@ export const TRACKS = [
     genre: "Electronic",
     albumId: 4,
     cover: "https://picsum.photos/seed/t6/200",
-    duration: 243,
+    audio: "https://cdn.pixabay.com/audio/2022/10/25/audio_946b8466a0.mp3",
   },
   {
     id: 7,
@@ -135,7 +137,7 @@ export const TRACKS = [
     genre: "Electronic",
     albumId: 4,
     cover: "https://picsum.photos/seed/t7/200",
-    duration: 207,
+    audio: "https://cdn.pixabay.com/audio/2023/04/05/audio_dda37a9a96.mp3",
   },
   {
     id: 8,
@@ -144,7 +146,7 @@ export const TRACKS = [
     genre: "Electronic",
     albumId: 5,
     cover: "https://picsum.photos/seed/t8/200",
-    duration: 219,
+    audio: "https://cdn.pixabay.com/audio/2022/03/15/audio_8cb4319a5e.mp3",
   },
   {
     id: 9,
@@ -153,7 +155,7 @@ export const TRACKS = [
     genre: "Dream Pop",
     albumId: 6,
     cover: "https://picsum.photos/seed/t9/200",
-    duration: 178,
+    audio: "https://cdn.pixabay.com/audio/2023/02/28/audio_9e40574608.mp3",
   },
   {
     id: 10,
@@ -162,6 +164,6 @@ export const TRACKS = [
     genre: "Dream Pop",
     albumId: 6,
     cover: "https://picsum.photos/seed/t10/200",
-    duration: 202,
+    audio: "https://cdn.pixabay.com/audio/2022/07/25/audio_9e0d2b7ab4.mp3",
   },
 ];
