@@ -685,3 +685,32 @@ body::before {
 
 /* ── Scrollbar global ────────────────────────────────────────────────────── */
 * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+/* ── Album DNA smooth color transitions ──────────────────────────────────── */
+body::before {
+  transition: background 1.2s ease;
+}
+.sidebar {
+  transition: background 1.2s ease;
+}
+.player {
+  transition: background 1.2s ease;
+}
+.play-btn {
+  transition: background 0.8s ease, transform 0.15s, box-shadow 0.8s ease;
+}
+.progress-bar__fill {
+  transition: width 0.2s linear, background 0.8s ease;
+}
+.nav-item--active {
+  transition: background 0.8s ease, color 0.8s ease;
+}
+.genre-chip--active {
+  transition: background 0.8s ease;
+}
+
+/* ── Visualizer canvas ───────────────────────────────────────────────────── */
+.visualizer-canvas {
+  border-radius: 6px;
+  opacity: 0.9;
+  flex-shrink: 0;
+}

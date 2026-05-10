@@ -8,15 +8,15 @@ const fmt = (s) => {
 };
 
 export default function Player({
-  audioElement, 
+  audioRef,
   track,
   isPlaying,
   toggle,
   next,
   prev,
   progress,
-  setProgress, // progress: 0–1, setProgress(ratio) seeks
-  duration, // real audio duration in seconds
+  setProgress,
+  duration,
   volume,
   setVolume,
   shuffle,
@@ -64,7 +64,6 @@ export default function Player({
           >
             <Icon d={Icons.shuffle} size={15} />
           </button>
-
           <button
             className="icon-btn icon-btn--lg"
             onClick={prev}
@@ -72,12 +71,7 @@ export default function Player({
           >
             <Icon d={Icons.prev} fill="currentColor" stroke="none" size={20} />
           </button>
-
-          <button
-            className="play-btn"
-            onClick={toggle}
-            title={isPlaying ? "Pause" : "Play"}
-          >
+          <button className="play-btn" onClick={toggle}>
             <Icon
               d={isPlaying ? Icons.pause : Icons.play}
               fill="currentColor"
@@ -85,22 +79,18 @@ export default function Player({
               size={20}
             />
           </button>
-
           <button className="icon-btn icon-btn--lg" onClick={next} title="Next">
             <Icon d={Icons.skip} fill="currentColor" stroke="none" size={20} />
           </button>
-
           <button
             className={`icon-btn ${repeat !== "none" ? "icon-btn--accent" : ""}`}
             onClick={toggleRepeat}
-            title={`Repeat: ${repeat}`}
           >
             <Icon d={Icons.repeat} size={15} />
             {repeat === "one" && <span className="repeat-badge">1</span>}
           </button>
         </div>
 
-        {/* Progress bar */}
         <div className="progress-bar">
           <div className="progress-bar__track" onClick={handleSeek}>
             <div
@@ -119,13 +109,12 @@ export default function Player({
         </div>
       </div>
 
-      {/* Right – volume */}
+      {/* Right – visualizer + volume */}
       <div className="player__right">
-        <Visualizer audioElement={audioElement} isPlaying={isPlaying} />
+        <Visualizer audioRef={audioRef} isPlaying={isPlaying} />
         <button
           className="icon-btn"
           onClick={() => setVolume(volume === 0 ? 75 : 0)}
-          title={volume === 0 ? "Unmute" : "Mute"}
         >
           <Icon d={volume === 0 ? Icons.volumeMute : Icons.volume} size={15} />
         </button>
@@ -136,7 +125,6 @@ export default function Player({
           value={volume}
           onChange={(e) => setVolume(Number(e.target.value))}
           className="volume-slider"
-          title={`Volume: ${volume}%`}
         />
         <span className="volume-label">{volume}</span>
       </div>
