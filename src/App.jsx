@@ -23,6 +23,7 @@ export default function App() {
   const [currentTrack, setCurrentTrack] = useState(TRACKS[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(75);
   const [liked, setLiked] = useState([]);
   const [queue, setQueue] = useState([...TRACKS]);
@@ -203,4 +204,3 @@ export default function App() {
     </div>
   );
 }
- 
