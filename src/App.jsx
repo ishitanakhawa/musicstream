@@ -1,16 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
 import { extractDominantColor } from "./utils/extractColor";
-
-// Data
 import { ARTISTS, TRACKS } from "./data";
-
-// Components
 import Sidebar from "./components/sidebar";
 import Player from "./components/player";
 import AddToPlaylistModal from "./components/AddToPlaylist";
-
-// Views
 import HomeView from "./views/Homeview";
 import SearchView from "./views/searchview";
 import LikedView from "./views/Likedview";
@@ -38,7 +32,7 @@ export default function App() {
 
   const audioRef = useRef(new Audio());
 
-  // Sync volume whenever it changes
+  // Sync volume
   useEffect(() => {
     audioRef.current.volume = volume / 100;
   }, [volume]);
@@ -51,13 +45,6 @@ export default function App() {
     audio.src = currentTrack.audio;
     audio.load();
     audio.volume = volume / 100;
-
-useEffect(() => {
-  if (!currentTrack?.cover) return;
-  extractDominantColor(currentTrack.cover).then((color) => {
-    document.documentElement.style.setProperty("--album-color", color);
-  });
-}, [currentTrack]);
 
     const onTimeUpdate = () => {
       if (audio.duration) setProgress(audio.currentTime / audio.duration);
@@ -85,6 +72,14 @@ useEffect(() => {
     if (isPlaying) audio.play().catch(() => {});
     else audio.pause();
   }, [isPlaying]);
+
+  // Album DNA — extract dominant color from cover art
+  useEffect(() => {
+    if (!currentTrack?.cover) return;
+    extractDominantColor(currentTrack.cover).then((color) => {
+      document.documentElement.style.setProperty("--album-color", color);
+    });
+  }, [currentTrack]);
 
   const handlePlay = (track) => {
     if (currentTrack?.id === track.id) {
@@ -136,7 +131,6 @@ useEffect(() => {
   const addToQueue = (t) => setQueue((q) => [...q, t]);
   const removeFromQueue = (i) =>
     setQueue((q) => q.filter((_, idx) => idx !== i));
-
   const removeTrackFromQueue = (id) =>
     setQueue((q) => q.filter((t) => t.id !== id));
   const toggleRepeat = () =>
@@ -165,7 +159,7 @@ useEffect(() => {
           isPlaying={isPlaying}
           onPlay={handlePlay}
           onRemove={removeFromQueue}
-          onRemoveById={removeTrackFromQueue} // ← add this line
+          onRemoveById={removeTrackFromQueue}
         />
       );
     if (view === "artists")
