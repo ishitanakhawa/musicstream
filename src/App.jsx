@@ -52,12 +52,12 @@ export default function App() {
     audio.load();
     audio.volume = volume / 100;
 
-    useEffect(() => {
-      if (!currentTrack?.cover) return;
-      extractDominantColor(currentTrack.cover).then((color) => {
-        document.documentElement.style.setProperty("--album-color", color);
-      });
-    }, [currentTrack]);
+useEffect(() => {
+  if (!currentTrack?.cover) return;
+  extractDominantColor(currentTrack.cover).then((color) => {
+    document.documentElement.style.setProperty("--album-color", color);
+  });
+}, [currentTrack]);
 
     const onTimeUpdate = () => {
       if (audio.duration) setProgress(audio.currentTime / audio.duration);

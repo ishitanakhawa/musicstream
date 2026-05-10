@@ -1,4 +1,34 @@
-// Free-to-use audio samples from various public domain / CC0 sources (Pixabay, Free Music Archive)
+export const ARTISTS = [
+  {
+    id: 1,
+    name: "Neon Drift",
+    genre: "Synthwave",
+    avatar: "https://api.dicebear.com/7.x/shapes/svg?seed=neon&backgroundColor=0f0035",
+    albums: [
+      { id: 1, title: "Midnight Pulse", cover: "https://picsum.photos/seed/album1/200", year: 2023 },
+      { id: 2, title: "Chrome Dreams", cover: "https://picsum.photos/seed/album2/200", year: 2022 },
+    ],
+  },
+  {
+    id: 2,
+    name: "Solar Haze",
+    genre: "Lo-fi",
+    avatar: "https://api.dicebear.com/7.x/shapes/svg?seed=solar&backgroundColor=1a0a2e",
+    albums: [
+      { id: 3, title: "Lazy Afternoons", cover: "https://picsum.photos/seed/album3/200", year: 2024 },
+    ],
+  },
+  {
+    id: 3,
+    name: "Void Runner",
+    genre: "Electronic",
+    avatar: "https://api.dicebear.com/7.x/shapes/svg?seed=void&backgroundColor=001122",
+    albums: [
+      { id: 4, title: "Static Field", cover: "https://picsum.photos/seed/album4/200", year: 2023 },
+    ],
+  },
+];
+
 export const TRACKS = [
   {
     id: 1,
@@ -6,8 +36,7 @@ export const TRACKS = [
     artist: "Neon Drift",
     album: "Midnight Pulse",
     cover: "https://picsum.photos/seed/album1/200",
-    audio: "https://cdn.pixabay.com/audio/2023/06/19/audio_6e01c30aaa.mp3",
-    duration: 150,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   },
   {
     id: 2,
@@ -15,8 +44,7 @@ export const TRACKS = [
     artist: "Neon Drift",
     album: "Midnight Pulse",
     cover: "https://picsum.photos/seed/album1/200",
-    audio: "https://cdn.pixabay.com/audio/2022/11/22/audio_febc508520.mp3",
-    duration: 135,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
   },
   {
     id: 3,
@@ -24,8 +52,7 @@ export const TRACKS = [
     artist: "Neon Drift",
     album: "Chrome Dreams",
     cover: "https://picsum.photos/seed/album2/200",
-    audio: "https://cdn.pixabay.com/audio/2023/03/09/audio_550d815fa5.mp3",
-    duration: 165,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
   },
   {
     id: 4,
@@ -33,8 +60,7 @@ export const TRACKS = [
     artist: "Solar Haze",
     album: "Lazy Afternoons",
     cover: "https://picsum.photos/seed/album3/200",
-    audio: "https://cdn.pixabay.com/audio/2022/10/31/audio_b5a0e90e14.mp3",
-    duration: 190,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
   },
   {
     id: 5,
@@ -42,8 +68,7 @@ export const TRACKS = [
     artist: "Solar Haze",
     album: "Lazy Afternoons",
     cover: "https://picsum.photos/seed/album3/200",
-    audio: "https://cdn.pixabay.com/audio/2023/01/27/audio_4991b8552f.mp3",
-    duration: 175,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
   },
   {
     id: 6,
@@ -51,8 +76,7 @@ export const TRACKS = [
     artist: "Void Runner",
     album: "Static Field",
     cover: "https://picsum.photos/seed/album4/200",
-    audio: "https://cdn.pixabay.com/audio/2022/12/19/audio_a15e5e8b29.mp3",
-    duration: 160,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
   },
   {
     id: 7,
@@ -60,8 +84,7 @@ export const TRACKS = [
     artist: "Void Runner",
     album: "Static Field",
     cover: "https://picsum.photos/seed/album4/200",
-    audio: "https://cdn.pixabay.com/audio/2023/02/14/audio_677b9fc699.mp3",
-    duration: 180,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
   },
   {
     id: 8,
@@ -69,8 +92,7 @@ export const TRACKS = [
     artist: "Neon Drift",
     album: "Chrome Dreams",
     cover: "https://picsum.photos/seed/album2/200",
-    audio: "https://cdn.pixabay.com/audio/2022/08/02/audio_884fe92c21.mp3",
-    duration: 145,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
   },
   {
     id: 9,
@@ -78,7 +100,6 @@ export const TRACKS = [
     artist: "Solar Haze",
     album: "Lazy Afternoons",
     cover: "https://picsum.photos/seed/album3/200",
-    audio: "https://cdn.pixabay.com/audio/2022/09/13/audio_29c5f9af01.mp3",
-    duration: 200,
+    audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
   },
 ];

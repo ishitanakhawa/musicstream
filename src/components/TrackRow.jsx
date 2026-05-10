@@ -4,6 +4,7 @@ import { fmt } from "../util";
 export default function TrackRow({
   track,
   isPlaying,
+
   isCurrent,
   onPlay,
   onLike,
@@ -56,18 +57,6 @@ export default function TrackRow({
           <Icon d={Icons.plus} size={15} />
         </button>
       </div>
-      {onRemove && (
-        <button
-          className="icon-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove(track.id);
-          }}
-          title="Remove from playlist"
-        >
-          ✕
-        </button>
-      )}
     </div>
   );
 }
