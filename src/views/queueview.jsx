@@ -1,5 +1,4 @@
 import Icon, { Icons } from "../components/Icon";
-import { fmt } from "../util";
 
 export default function QueueView({
   queue,
@@ -11,6 +10,9 @@ export default function QueueView({
   return (
     <div className="view">
       <h1 className="view__heading">Queue</h1>
+      <p className="muted" style={{ marginBottom: 16 }}>
+        {queue.length} song{queue.length !== 1 ? "s" : ""} in queue
+      </p>
 
       {queue.length === 0 && (
         <p className="empty-state">Your queue is empty.</p>
@@ -41,7 +43,7 @@ export default function QueueView({
               <span className="track-row__title">{t.title}</span>
               <span className="track-row__artist">{t.artist}</span>
             </div>
-            <span className="track-row__dur">{fmt(t.duration)}</span>
+            <span className="track-row__genre">{t.genre}</span>
             <button className="icon-btn" onClick={() => onRemove(i)}>
               <Icon d={Icons.close} size={14} />
             </button>
