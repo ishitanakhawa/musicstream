@@ -721,3 +721,123 @@ body::before {
   margin-bottom: 12px;
   font-family: "DM Mono", monospace;
 }
+/* ── Carousel ────────────────────────────────────────────────────────────── */
+.carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 40px 0 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+.carousel-card {
+  position: absolute;
+  width: 180px;
+  height: 240px;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transform:
+    translateX(calc(var(--offset) * 140px))
+    scale(calc(1 - abs(var(--offset)) * 0.12))
+    rotateY(calc(var(--offset) * -8deg));
+  z-index: calc(10 - abs(var(--offset)));
+  filter: brightness(calc(1 - abs(var(--offset)) * 0.25));
+  flex-shrink: 0;
+}
+
+.carousel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.carousel-card__info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 40px 14px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.carousel-card--active .carousel-card__info {
+  opacity: 1;
+}
+
+.carousel-card--active {
+  width: 200px;
+  height: 265px;
+  box-shadow:
+    0 0 0 2.5px var(--accent),
+    0 30px 80px rgba(0,0,0,0.7),
+    0 0 60px rgba(245,166,35,0.2);
+  filter: brightness(1);
+}
+
+.carousel-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.carousel-card__artist {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 3px;
+}
+
+.carousel-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.carousel-card:hover .carousel-card__overlay {
+  background: rgba(0,0,0,0.35);
+}
+
+/* abs() polyfill via clamp for older browsers */
+.carousel-card {
+  --abs-offset: max(var(--offset), calc(var(--offset) * -1));
+}
+.carousel-card[style*="--offset: 0"] {
+  transform: translateX(0px) scale(1) rotateY(0deg);
+  z-index: 10;
+  filter: brightness(1);
+}
+.carousel-card[style*="--offset: 1"],
+.carousel-card[style*="--offset: -1"] {
+  transform: translateX(calc(var(--offset) * 140px)) scale(0.88) rotateY(calc(var(--offset) * -8deg));
+  z-index: 9;
+  filter: brightness(0.75);
+}
+.carousel-card[style*="--offset: 2"],
+.carousel-card[style*="--offset: -2"] {
+  transform: translateX(calc(var(--offset) * 140px)) scale(0.76) rotateY(calc(var(--offset) * -8deg));
+  z-index: 8;
+  filter: brightness(0.55);
+}
+.carousel-card[style*="--offset: 3"],
+.carousel-card[style*="--offset: -3"] {
+  transform: translateX(calc(var(--offset) * 140px)) scale(0.65) rotateY(calc(var(--offset) * -8deg));
+  z-index: 7;
+  filter: brightness(0.35);
+  opacity: 0.6;
+}
