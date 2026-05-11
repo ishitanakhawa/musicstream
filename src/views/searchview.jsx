@@ -2,8 +2,6 @@ import { useState } from "react";
 import Icon, { Icons } from "../components/Icon";
 import TrackRow from "../components/TrackRow";
 
-const GENRES = ["All", "Synthwave", "Lo-fi", "Electronic", "Dream Pop"];
-
 export default function SearchView({
   tracks,
   currentTrack,
@@ -17,12 +15,19 @@ export default function SearchView({
   const [q, setQ] = useState("");
   const [genre, setGenre] = useState("All");
 
+  // Dynamically build genre list from actual tracks — never stale
+  const genres = ["All", ...new Set(tracks.map((t) => t.genre))];
+
+  // If selected genre no longer exists in tracks, reset to All
+  const activeGenre = genres.includes(genre) ? genre : "All";
+
   const filtered = tracks.filter((t) => {
-    const matchGenre = genre === "All" || t.genre === genre;
+    const matchGenre = activeGenre === "All" || t.genre === activeGenre;
     const matchQ =
       !q ||
       t.title.toLowerCase().includes(q.toLowerCase()) ||
-      t.artist.toLowerCase().includes(q.toLowerCase());
+      t.artist.toLowerCase().includes(q.toLowerCase()) ||
+      t.genre.toLowerCase().includes(q.toLowerCase());
     return matchGenre && matchQ;
   });
 
@@ -33,10 +38,11 @@ export default function SearchView({
       <div className="search-bar">
         <Icon d={Icons.search} size={16} />
         <input
-          placeholder="Search artists, songs…"
+          placeholder="Search songs, artists, genres…"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           className="search-input"
+          autoFocus
         />
         {q && (
           <button className="icon-btn" onClick={() => setQ("")}>
@@ -46,16 +52,22 @@ export default function SearchView({
       </div>
 
       <div className="genre-chips">
-        {GENRES.map((g) => (
+        {genres.map((g) => (
           <button
             key={g}
-            className={`genre-chip ${genre === g ? "genre-chip--active" : ""}`}
+            className={`genre-chip ${activeGenre === g ? "genre-chip--active" : ""}`}
             onClick={() => setGenre(g)}
           >
             {g}
           </button>
         ))}
       </div>
+
+      <p className="search-results-count">
+        {filtered.length} song{filtered.length !== 1 ? "s" : ""}
+        {activeGenre !== "All" ? ` in ${activeGenre}` : ""}
+        {q ? ` for "${q}"` : ""}
+      </p>
 
       <div className="track-list">
         {filtered.length === 0 && (

@@ -12,7 +12,6 @@ export default function Sidebar({ view, setView, playlists }) {
   return (
     <aside className="sidebar">
       <div className="sidebar__logo">
-        <span className="logo-icon">◈</span>
         <span className="logo-text">MusicStream</span>
       </div>
 
