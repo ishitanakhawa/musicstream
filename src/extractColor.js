@@ -1,43 +1,50 @@
 
 const PALETTES = [
-  { accent: "#f5a623", accent2: "#e8742a", accent3: "#ffcf72", bg: "#1c0800" },
-  { accent: "#a78bfa", accent2: "#7c3aed", accent3: "#c4b5fd", bg: "#0d0118" },
-  { accent: "#34d399", accent2: "#059669", accent3: "#6ee7b7", bg: "#001a0f" },
-  { accent: "#38bdf8", accent2: "#0284c7", accent3: "#7dd3fc", bg: "#00101a" },
-  { accent: "#f472b6", accent2: "#db2777", accent3: "#fbcfe8", bg: "#1a0010" },
-  { accent: "#fb923c", accent2: "#ea580c", accent3: "#fed7aa", bg: "#1a0800" },
+  { h: 28, s: 85, l: 35 }, // warm amber
+  { h: 260, s: 70, l: 40 }, // purple
+  { h: 160, s: 65, l: 30 }, // teal green
+  { h: 200, s: 75, l: 35 }, // ocean blue
+  { h: 330, s: 70, l: 35 }, // pink
+  { h: 15, s: 80, l: 32 }, // burnt orange
 ];
 
-function applyPalette(p) {
-  const r = document.documentElement;
-  r.style.setProperty("--accent", p.accent);
-  r.style.setProperty("--accent2", p.accent2);
-  r.style.setProperty("--accent3", p.accent3);
-  r.style.setProperty("--bg", p.bg);
-  r.style.setProperty(
-    "--grad",
-    `linear-gradient(145deg, ${p.bg} 0%, ${p.accent2}44 50%, ${p.accent}88 100%)`,
-  );
-  r.style.setProperty(
-    "--grad-sidebar",
-    `linear-gradient(180deg, ${p.bg}f8 0%, ${p.bg}fd 100%)`,
-  );
-  r.style.setProperty(
-    "--grad-player",
-    `linear-gradient(90deg, ${p.bg}cc 0%, ${p.bg}ee 100%)`,
-  );
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n) => {
+    const k = (n + h / 30) % 12;
+    return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))));
+  };
+  return `#${[f(0), f(8), f(4)].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 }
 
-function rgbToHex(r, g, b) {
-  return (
-    "#" +
-    [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("")
+function applyTheme(h, s, l) {
+  const root = document.documentElement;
+
+  // Dark base for bg
+  const bgDark = hslToHex(h, s, 8);
+  const bgMid = hslToHex(h, s, 18);
+  const bgBright = hslToHex(h, s, 38);
+  const accent = hslToHex(h, s, 60);
+  const accent2 = hslToHex(h, s + 5, 48);
+  const accent3 = hslToHex(h, s - 10, 72);
+
+  root.style.setProperty("--bg", bgDark);
+  root.style.setProperty("--accent", accent);
+  root.style.setProperty("--accent2", accent2);
+  root.style.setProperty("--accent3", accent3);
+
+  // Full-page radial gradient that changes with song
+  root.style.setProperty(
+    "--grad",
+    `radial-gradient(ellipse 80% 60% at 60% 30%, ${bgBright}cc 0%, ${bgMid} 50%, ${bgDark} 100%)`,
   );
 }
 
 function extractFromCanvas(img, trackId) {
   try {
-    const SIZE = 64;
+    const SIZE = 80;
     const canvas = Object.assign(document.createElement("canvas"), {
       width: SIZE,
       height: SIZE,
@@ -46,76 +53,66 @@ function extractFromCanvas(img, trackId) {
     ctx.drawImage(img, 0, 0, SIZE, SIZE);
     const { data } = ctx.getImageData(0, 0, SIZE, SIZE);
 
+    // Build color buckets
     const buckets = {};
-    for (let i = 0; i < data.length; i += 12) {
+    for (let i = 0; i < data.length; i += 8) {
       const r = data[i],
         g = data[i + 1],
         b = data[i + 2],
         a = data[i + 3];
-      if (a < 128) continue;
+      if (a < 100) continue;
       const brightness = (r + g + b) / 3;
-      if (brightness < 25 || brightness > 230) continue;
-      const key = `${Math.round(r / 40) * 40},${Math.round(g / 40) * 40},${Math.round(b / 40) * 40}`;
+      if (brightness < 20 || brightness > 235) continue;
+
+      // Convert to HSL to check saturation
+      const max = Math.max(r, g, b) / 255,
+        min = Math.min(r, g, b) / 255;
+      const sat = max === 0 ? 0 : (max - min) / max;
+      if (sat < 0.2) continue; // skip grey/brown/muted
+
+      const key = `${Math.round(r / 32) * 32},${Math.round(g / 32) * 32},${Math.round(b / 32) * 32}`;
       buckets[key] = (buckets[key] || 0) + 1;
     }
 
     const sorted = Object.entries(buckets).sort((a, b) => b[1] - a[1]);
-    if (!sorted.length) throw new Error("no colors");
+    if (!sorted.length) throw new Error("no vivid colors");
 
-    const parse = (k) => k.split(",").map(Number);
-    const [r1, g1, b1] = parse(sorted[0][0]);
+    const [r, g, b] = sorted[0][0].split(",").map(Number);
 
-    // Find second distinct color
-    let r2 = r1,
-      g2 = g1,
-      b2 = b1;
-    for (const [key] of sorted.slice(1)) {
-      const [r, g, b] = parse(key);
-      if (Math.abs(r - r1) + Math.abs(g - g1) + Math.abs(b - b1) > 90) {
-        [r2, g2, b2] = [r, g, b];
-        break;
-      }
+    // Convert dominant color to HSL
+    const rn = r / 255,
+      gn = g / 255,
+      bn = b / 255;
+    const max = Math.max(rn, gn, bn),
+      min = Math.min(rn, gn, bn);
+    const l = (max + min) / 2;
+    const d = max - min;
+    const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+    let h = 0;
+    if (d !== 0) {
+      if (max === rn) h = ((gn - bn) / d) % 6;
+      else if (max === gn) h = (bn - rn) / d + 2;
+      else h = (rn - gn) / d + 4;
     }
+    h = Math.round(h * 60);
+    if (h < 0) h += 360;
 
-    // Boost vibrancy
-    const boost = (r, g, b) => {
-      const max = Math.max(r, g, b);
-      const f = max > 0 ? Math.min(255 / max, 1.7) : 1;
-      return [Math.min(255, r * f), Math.min(255, g * f), Math.min(255, b * f)];
-    };
-
-    const [br1, bg1, bb1] = boost(r1, g1, b1);
-    const [br2, bg2, bb2] = boost(r2, g2, b2);
-
-    const accent = rgbToHex(br1, bg1, bb1);
-    const accent2 = rgbToHex(br2, bg2, bb2);
-    const accent3 = rgbToHex((br1 + 255) / 2, (bg1 + 255) / 2, (bb1 + 255) / 2);
-    const bg = rgbToHex(
-      Math.round(br1 * 0.07),
-      Math.round(bg1 * 0.07),
-      Math.round(bb1 * 0.07),
-    );
-
-    applyPalette({ accent, accent2, accent3, bg });
-  } catch (e) {
-    // Fall back to preset palette based on trackId
-    applyPalette(PALETTES[trackId % PALETTES.length]);
+    applyTheme(h, Math.round(s * 100), Math.round(l * 100));
+  } catch {
+    const p = PALETTES[trackId % PALETTES.length];
+    applyTheme(p.h, p.s, p.l);
   }
 }
 
 export function applyAlbumDNA(coverUrl, trackId) {
-  // Always apply a preset immediately for instant color change
-  applyPalette(PALETTES[trackId % PALETTES.length]);
+  // Instant palette swap
+  const p = PALETTES[trackId % PALETTES.length];
+  applyTheme(p.h, p.s, p.l);
 
-  // Then try to extract real colors from the image
+  // Then extract real color
   const img = new Image();
   img.crossOrigin = "anonymous";
-
   img.onload = () => extractFromCanvas(img, trackId);
-  img.onerror = () => {
-    // CORS blocked — preset already applied, nothing more to do
-  };
-
-  // Try with crossOrigin first; picsum supports it
+  img.onerror = () => {};
   img.src = coverUrl;
 }

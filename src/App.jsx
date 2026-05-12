@@ -13,6 +13,7 @@ import QueueView from "./views/queueview";
 import ArtistsView from "./views/Artistsview";
 import PlaylistsView from "./views/playlistview";
 import PlaylistDetailView from "./views/playlistdetailview";
+import SubscriptionView from "./views/SubscriptionView";
 
 /** Fisher-Yates shuffle — returns a new shuffled array */
 function shuffleArray(arr) {
@@ -225,6 +226,8 @@ export default function App() {
       );
     if (view === "artists")
       return <ArtistsView artists={ARTISTS} {...common} />;
+    if (view === "subscription")
+      return <SubscriptionView />;
     if (view === "playlists")
       return (
         <PlaylistsView

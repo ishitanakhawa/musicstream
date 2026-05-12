@@ -7,6 +7,7 @@ export default function Sidebar({ view, setView, playlists }) {
     { id: "liked", icon: Icons.heart, label: "Liked Songs" },
     { id: "queue", icon: Icons.queue, label: "Queue" },
     { id: "artists", icon: Icons.artist, label: "Artists" },
+    { id: "subscription", icon: Icons.star, label: "Subscription" },
   ];
 
   return (

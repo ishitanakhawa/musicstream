@@ -17,12 +17,20 @@ export default function TrackRow({
       <div className="track-row__cover" onClick={onPlay}>
         <img src={track.cover} alt={track.title} />
         <div className="track-row__play-overlay">
-          <Icon
-            d={isCurrent && isPlaying ? Icons.pause : Icons.play}
-            fill="white"
-            stroke="none"
-            size={16}
-          />
+          {isCurrent && isPlaying ? (
+            <div className="eq-container" title="Pause">
+              <div className="eq-bar"></div>
+              <div className="eq-bar"></div>
+              <div className="eq-bar"></div>
+            </div>
+          ) : (
+            <Icon
+              d={isCurrent && isPlaying ? Icons.pause : Icons.play}
+              fill="white"
+              stroke="none"
+              size={16}
+            />
+          )}
         </div>
       </div>
       <div className="track-row__info">
