@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
 
 import { ARTISTS, TRACKS } from "./data";
-import { applyAlbumDNA } from "./extractColor";
 import Sidebar from "./components/sidebar";
 import Player from "./components/player";
 import AddToPlaylistModal from "./components/AddToPlaylist";
@@ -85,12 +84,6 @@ export default function App() {
     if (isPlaying) audio.play().catch(() => {});
     else audio.pause();
   }, [isPlaying]);
-
-  // ── Album DNA ─────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!currentTrack) return;
-    applyAlbumDNA(currentTrack.cover, currentTrack.id);
-  }, [currentTrack]);
 
   // ── When shuffle is toggled ON, pre-generate a shuffled play order ────────
   useEffect(() => {

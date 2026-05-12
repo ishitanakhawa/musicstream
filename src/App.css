@@ -1,21 +1,21 @@
 /* ── Variables ───────────────────────────────────────────────────────────── */
 :root {
-  --bg:        #0f0f13;
-  --accent:    #6366f1;
-  --accent2:   #ec4899;
-  --accent3:   #8b5cf6;
-  --text:      #ffffff;
-  --text2:     rgba(255,255,255,0.7);
-  --text3:     rgba(255,255,255,0.4);
-  --glass:     rgba(25,25,35,0.4);
-  --glass-hi:  rgba(255,255,255,0.12);
-  --border:    rgba(255,255,255,0.08);
-  --border-hi: rgba(255,255,255,0.18);
+  --bg:        #0a0900;
+  --accent:    #f5c518;
+  --accent2:   #e6a800;
+  --accent3:   #ffe066;
+  --text:      #fffbe6;
+  --text2:     rgba(255,251,230,0.7);
+  --text3:     rgba(255,251,230,0.4);
+  --glass:     rgba(18,16,0,0.55);
+  --glass-hi:  rgba(245,197,24,0.10);
+  --border:    rgba(245,197,24,0.12);
+  --border-hi: rgba(245,197,24,0.30);
   --sidebar-w: 240px;
   --player-h:  96px;
   --radius:    20px;
   --radius-sm: 12px;
-  --grad: radial-gradient(ellipse 80% 60% at 60% 30%, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.05) 50%, #0f0f13 100%);
+  --grad: radial-gradient(ellipse 80% 60% at 55% 25%, rgba(245,197,24,0.18) 0%, rgba(180,120,0,0.07) 50%, #0a0900 100%);
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────────── */
