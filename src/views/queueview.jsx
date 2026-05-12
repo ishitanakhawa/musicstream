@@ -1,4 +1,4 @@
-import Icon, { Icons } from "../components/Icon";
+import TrackRow from "../components/TrackRow";
 
 export default function QueueView({
   queue,
@@ -6,6 +6,8 @@ export default function QueueView({
   isPlaying,
   onPlay,
   onRemove,
+  onDownloadTrack,
+  hasPremiumDownloads,
 }) {
   return (
     <div className="view">
@@ -20,34 +22,20 @@ export default function QueueView({
 
       <div className="track-list">
         {queue.map((t, i) => (
-          <div
+          <TrackRow
             key={`${t.id}-${i}`}
-            className={`track-row ${currentTrack?.id === t.id ? "track-row--active" : ""}`}
-          >
-            <div className="track-row__cover" onClick={() => onPlay(t)}>
-              <img src={t.cover} alt={t.title} />
-              <div className="track-row__play-overlay">
-                <Icon
-                  d={
-                    currentTrack?.id === t.id && isPlaying
-                      ? Icons.pause
-                      : Icons.play
-                  }
-                  fill="white"
-                  stroke="none"
-                  size={16}
-                />
-              </div>
-            </div>
-            <div className="track-row__info">
-              <span className="track-row__title">{t.title}</span>
-              <span className="track-row__artist">{t.artist}</span>
-            </div>
-            <span className="track-row__genre">{t.genre}</span>
-            <button className="icon-btn" onClick={() => onRemove(i)}>
-              <Icon d={Icons.close} size={14} />
-            </button>
-          </div>
+            track={t}
+            isCurrent={currentTrack?.id === t.id}
+            isPlaying={isPlaying}
+            onPlay={() => onPlay(t)}
+            liked={false}
+            onLike={() => {}}
+            onAddToQueue={() => {}}
+            onAddToPlaylist={() => {}}
+            onRemoveFromQueue={() => onRemove(i)}
+            onDownloadTrack={onDownloadTrack}
+            hasPremiumDownloads={hasPremiumDownloads}
+          />
         ))}
       </div>
     </div>

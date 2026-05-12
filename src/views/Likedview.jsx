@@ -10,6 +10,8 @@ export default function LikedView({
   onLike,
   onAddToQueue,
   onAddToPlaylist,
+  onDownloadTrack,
+  hasPremiumDownloads,
 }) {
   const likedTracks = tracks.filter((t) => liked.includes(t.id));
 
@@ -44,6 +46,8 @@ export default function LikedView({
             onLike={() => onLike(t.id)}
             onAddToQueue={() => onAddToQueue(t)}
             onAddToPlaylist={() => onAddToPlaylist(t)}
+            onDownloadTrack={onDownloadTrack}
+            hasPremiumDownloads={hasPremiumDownloads}
           />
         ))}
       </div>

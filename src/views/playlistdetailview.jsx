@@ -9,6 +9,9 @@ export default function PlaylistDetailView({
   liked,
   onLike,
   onAddToQueue,
+  onAddToPlaylist,
+  onDownloadTrack,
+  hasPremiumDownloads,
 }) {
   const plTracks = tracks.filter((t) => playlist.tracks.includes(t.id));
 
@@ -48,7 +51,9 @@ export default function PlaylistDetailView({
             liked={liked.includes(t.id)}
             onLike={() => onLike(t.id)}
             onAddToQueue={() => onAddToQueue(t)}
-            onAddToPlaylist={() => {}}
+            onAddToPlaylist={() => onAddToPlaylist?.(t)}
+            onDownloadTrack={onDownloadTrack}
+            hasPremiumDownloads={hasPremiumDownloads}
           />
         ))}
       </div>

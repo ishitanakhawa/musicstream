@@ -11,6 +11,8 @@ export default function ArtistsView({
   onLike,
   onAddToQueue,
   onAddToPlaylist,
+  onDownloadTrack,
+  hasPremiumDownloads,
 }) {
   const [selected, setSelected] = useState(null);
   const artist = artists.find((a) => a.id === selected);
@@ -66,6 +68,8 @@ export default function ArtistsView({
               onLike={() => onLike(t.id)}
               onAddToQueue={() => onAddToQueue(t)}
               onAddToPlaylist={() => onAddToPlaylist(t)}
+              onDownloadTrack={onDownloadTrack}
+              hasPremiumDownloads={hasPremiumDownloads}
             />
           ))}
         </div>

@@ -11,6 +11,8 @@ export default function SearchView({
   onLike,
   onAddToQueue,
   onAddToPlaylist,
+  onDownloadTrack,
+  hasPremiumDownloads,
 }) {
   const [q, setQ] = useState("");
   const [genre, setGenre] = useState("All");
@@ -84,6 +86,8 @@ export default function SearchView({
             onLike={() => onLike(t.id)}
             onAddToQueue={() => onAddToQueue(t)}
             onAddToPlaylist={() => onAddToPlaylist(t)}
+            onDownloadTrack={onDownloadTrack}
+            hasPremiumDownloads={hasPremiumDownloads}
           />
         ))}
       </div>
